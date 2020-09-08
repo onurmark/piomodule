@@ -1,0 +1,12 @@
+.cache.mk
+.tmp_versions
+*.o
+.*.o.cmd
+.*.ko.cmd
+*.ko
+*.mod.c
+*.ur-safe
+Module.symvers
+modules.order
+.ycm_extra_conf.py
+
