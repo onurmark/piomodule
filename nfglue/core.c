@@ -39,6 +39,16 @@ filter_lookup_and_verdict(struct sk_buff *skb)
     return 0;
 }
 
+static void
+print_debug_skb(struct sk_buff *skb)
+{
+    printk(KERN_ERR "skb->data: %p, skb->data_len: %u\n",
+           skb->data, skb->data_len);
+
+    print_hex_dump(KERN_DEBUG, "skb: ", DUMP_PREFIX_OFFSET,
+                   16, 1, skb->data, 120, true);
+}
+
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0)
 static unsigned int
 packet_in(const struct nf_hook_ops *ops,
@@ -54,6 +64,8 @@ packet_in(void *priv,
 #endif
 {
     int verdict = TF_ACCEPT;
+
+    print_debug_skb(skb);
 
     if (filter_lookup_and_verdict(skb)) {
         return NF_ACCEPT;
@@ -76,7 +88,7 @@ static struct nf_hook_ops hooks[] __read_mostly = {
 #if LINUX_VERSION_CODE < KERNEL_VERSION(4,1,0)
         .owner    = THIS_MODULE,
 #endif
-        .hooknum  = NF_INET_PRE_ROUTING,
+        .hooknum  = NF_INET_FORWARD,
         .pf       = PF_INET,
         .priority = NF_IP_PRI_FIRST,
     },
