@@ -209,7 +209,7 @@ packet_in(struct sk_buff *skb,
            tm_flood_args[index].name,
            &elem->saddr, &elem->daddr);
 
-    tf_notifier_call(1, NULL);
+    tf_notifier_call(TF_MSG_FILTER_ADD, NULL);
 
 detect:
     elem->tstamp = jiffies;
